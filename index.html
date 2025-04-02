@@ -42,6 +42,8 @@
       value="128"
       min="50"
     />
+    <label for="color">QR Code Color:</label>
+    <input type="color" id="color" value="#000000" />
     <button onclick="generateQRCode()">Generate QR Code</button>
     <div id="qrcode"></div>
     <button id="download" style="display: none" onclick="downloadQRCode()">
@@ -53,6 +55,7 @@
         let qrText = document.getElementById("text").value;
         let qrWidth = parseInt(document.getElementById("width").value) || 128;
         let qrHeight = parseInt(document.getElementById("height").value) || 128;
+        let qrColor = document.getElementById("color").value;
 
         if (!qrText) {
           alert("Please enter text or URL");
@@ -63,6 +66,8 @@
           text: qrText,
           width: qrWidth,
           height: qrHeight,
+          colorDark: qrColor,
+          colorLight: "#ffffff",
         });
         setTimeout(() => {
           document.getElementById("download").style.display = "block";
@@ -82,11 +87,12 @@
         }
 
         // Create a new canvas with a white background and black border
+        let padding = 20;
         let borderSize = 10;
         let newCanvas = document.createElement("canvas");
         let ctx = newCanvas.getContext("2d");
-        newCanvas.width = qrCanvas.width + borderSize * 2;
-        newCanvas.height = qrCanvas.height + borderSize * 2;
+        newCanvas.width = qrCanvas.width + padding * 2;
+        newCanvas.height = qrCanvas.height + padding * 2;
 
         // Fill the background with white
         ctx.fillStyle = "#fff";
@@ -110,7 +116,7 @@
         ); // Right border
 
         // Draw the QR code inside the bordered background
-        ctx.drawImage(qrCanvas, borderSize, borderSize);
+        ctx.drawImage(qrCanvas, padding, padding);
 
         // Download the new image
         let qrImage = newCanvas.toDataURL("image/png");
